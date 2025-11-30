@@ -26,12 +26,22 @@ export class UsersController {
     return this.USERService.create(data.email, data.password);
   }
 
-  // → LA ROUTE QUE TU VEUX : tous les users de la vraie base
-  @Get('/all')
-  findAll() {
-    return this.USERService.findALL();
-  }
+  // → LA ROUTE QUI AFFICHE TOUS LES USERS DE LA VRAIE BASE
+@Get('/all')
+async findAll() {
+  return await this.USERService.findAll();   // ← c’est ÇA qu’il faut
+}
+   // 📧 ENDPOINT 4 : GET /users/email/:email - Obtenir un utilisateur par email
+  @Get('email/:email')
+  async getUserByEmail(@Param('email') email: string) {
+    const user = await this.USERService.findOneByEmail(email);
 
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return user;
+  }
   // ===================================================================
   // Les routes de démo (tableau en mémoire) – elles marchent aussi
   // ===================================================================
